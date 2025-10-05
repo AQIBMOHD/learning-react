@@ -2,8 +2,9 @@
   "name": "learning-react",
   "version": "1.0.0",
   "description": "This is just for rev learning",
-  "main": "App.js",
   "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
     "test": "jest"
   },
   "repository": {
@@ -15,5 +16,20 @@
   "bugs": {
     "url": "https://github.com/AQIBMOHD/ReactLearning/issues"
   },
-  "homepage": "https://github.com/AQIBMOHD/ReactLearning#readme"
+  "homepage": "https://github.com/AQIBMOHD/ReactLearning#readme",
+  "devDependencies": {
+    "parcel": "^2.13.3",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^6.22.3",
+    "redux": "^5.0.1"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ]
 }
