@@ -106,22 +106,161 @@
 
 
 
+// // src/component/Body.js
+// import { useState, useEffect, useCallback } from "react";
+// import RestaurantCard from "./RestaurantCard";
+// import Shimmer from "./Shimmer";
+// import { RESTAURANT_LIST_API } from "../utils/constant";
+// import { Link } from "react-router-dom";
 
-// src/component/Body.js
+// const Body = () => {
+//   const [listOfRestaurants, setListOfRestaurants] = useState([]);
+//   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState(null);  
+//   const [searchText, setSearchText] = useState("");
+
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+
+//   const debounce = (func, delay) => {
+//     let timeoutId;
+//     return (...args) => {
+//       clearTimeout(timeoutId);
+//       timeoutId = setTimeout(() => func(...args), delay);
+//     };
+//   };
+
+//   const fetchData = async () => {
+//     try {
+//       setIsLoading(true);
+//       setError(null);
+//       const response = await fetch(RESTAURANT_LIST_API);  
+//       if (!response.ok) throw new Error("Failed to fetch restaurants.");
+
+//       const json = await response.json();
+//       const restaurantArray = json?.data?.cards?.find(card => 
+//         card?.card?.card?.gridElements?.infoWithStyle?.restaurants
+//       )?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+
+//       setListOfRestaurants(restaurantArray);
+//       setFilteredRestaurants(restaurantArray);
+//     } catch (err) {
+//       setError(err.message);
+//       setListOfRestaurants([]);
+//       setFilteredRestaurants([]);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   const filterTopRated = () => {
+//     const filtered = listOfRestaurants.filter(
+//       (res) => res.info.avgRating > 4.0
+//     );
+//     setFilteredRestaurants(filtered);
+//   };
+
+//   const debouncedSearch = useCallback(
+//     debounce((text) => {
+//       const filtered = listOfRestaurants.filter((res) =>
+//         res.info.name.toLowerCase().includes(text.toLowerCase())
+//       );
+//       setFilteredRestaurants(filtered);
+//     }, 300),
+//     [listOfRestaurants]
+//   );
+
+//   const resetFilters = () => {
+//     setSearchText("");
+//     setFilteredRestaurants(listOfRestaurants);
+//   };
+
+//   const handleSearchInput = (e) => {
+//     const text = e.target.value;
+//     setSearchText(text);
+//     debouncedSearch(text);
+//   };
+
+//   if (!isLoading && listOfRestaurants.length === 0) {
+//     return (
+//       <div className="error-container">
+//         <Shimmer />
+//         {error && (
+//           <div className="error-overlay">
+//             <p className="error-text">{error}</p>
+//             <button className="retry-btn" onClick={fetchData}>
+//               Retry
+//             </button>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="body">
+//       <div className="filter-section">
+//         <input
+//           type="text"
+//           className="search-bar"
+//           value={searchText}
+//           onChange={handleSearchInput}
+//           placeholder="Search for restaurants..."
+//         />
+//         <button className="filter-btn" onClick={filterTopRated}>
+//           Top Rated
+//         </button>
+//         <button className="reset-btn" onClick={resetFilters}>
+//           Reset
+//         </button>
+//       </div>
+
+//       <div className="restaurant-container">
+//         {isLoading ? (
+//           <Shimmer />
+//         ) : error ? (
+//           <div className="error-container">
+//             <p className="error-text">{error}</p>
+//             <button className="retry-btn" onClick={fetchData}>Retry</button>
+//           </div>
+//         ) : filteredRestaurants.length > 0 ? (
+//           filteredRestaurants.map((restaurant) => (
+//             <Link
+//               key={restaurant.info.id}
+//               to={`/restaurants/${restaurant.info.id}`}
+//             >
+//               <RestaurantCard
+//                 resData={restaurant}
+//               />
+//             </Link>
+//           ))
+//         ) : (
+//           <p className="no-results">No restaurants found...</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Body;
+
+
+
 // src/component/Body.js
 import { useState, useEffect, useCallback } from "react";
 import RestaurantCard from "./RestaurantCard";
-import Restaurantmenu from "./Restaurantmenu";
 import Shimmer from "./Shimmer";
-import { RESTAURANT_LIST_API } from "../utils/constant"; // API import
+import { RESTAURANT_LIST_API } from "../utils/constant";
+import { Link } from "react-router-dom";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);  
+  const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -133,26 +272,25 @@ const Body = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => func(...args), delay);
     };
-  };  
+  };
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(RESTAURANT_LIST_API);  
-      if (!response.ok) {
-        throw new Error("Failed to fetch restaurants. Please try again.");
-      }
+
+      const response = await fetch(RESTAURANT_LIST_API);
+      if (!response.ok) throw new Error("Failed to fetch restaurants.");
+
       const json = await response.json();
-      const restaurantArray = json?.data?.cards?.find(card => 
+      const restaurantArray = json?.data?.cards?.find((card) =>
         card?.card?.card?.gridElements?.infoWithStyle?.restaurants
       )?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-      console.log("Fetched restaurants:", restaurantArray);
+
       setListOfRestaurants(restaurantArray);
       setFilteredRestaurants(restaurantArray);
     } catch (err) {
       setError(err.message);
-      console.log("Fetch error:", err);
       setListOfRestaurants([]);
       setFilteredRestaurants([]);
     } finally {
@@ -161,16 +299,18 @@ const Body = () => {
   };
 
   const filterTopRated = () => {
-    const filtered = listOfRestaurants.filter((res) => res.info.avgRating > 4.0);
-    setFilteredRestaurants(filtered);
+    setFilteredRestaurants(
+      listOfRestaurants.filter((res) => res.info.avgRating > 4)
+    );
   };
 
   const debouncedSearch = useCallback(
     debounce((text) => {
-      const filtered = listOfRestaurants.filter((res) =>
-        res.info.name.toLowerCase().includes(text.toLowerCase())
+      setFilteredRestaurants(
+        listOfRestaurants.filter((res) =>
+          res.info.name.toLowerCase().includes(text.toLowerCase())
+        )
       );
-      setFilteredRestaurants(filtered);
     }, 300),
     [listOfRestaurants]
   );
@@ -178,18 +318,12 @@ const Body = () => {
   const resetFilters = () => {
     setSearchText("");
     setFilteredRestaurants(listOfRestaurants);
-    setSelectedRestaurantId(null);
   };
 
   const handleSearchInput = (e) => {
     const text = e.target.value;
     setSearchText(text);
     debouncedSearch(text);
-  };
-
-  const handleRestaurantClick = (id) => {
-    console.log("Selected restaurant ID:", id);
-    setSelectedRestaurantId(id);
   };
 
   if (!isLoading && listOfRestaurants.length === 0) {
@@ -199,7 +333,9 @@ const Body = () => {
         {error && (
           <div className="error-overlay">
             <p className="error-text">{error}</p>
-            <button className="retry-btn" onClick={fetchData}>Retry</button>
+            <button className="retry-btn" onClick={fetchData}>
+              Retry
+            </button>
           </div>
         )}
       </div>
@@ -215,15 +351,16 @@ const Body = () => {
           value={searchText}
           onChange={handleSearchInput}
           placeholder="Search for restaurants..."
-          disabled={isLoading}
         />
-        <button className="filter-btn" onClick={filterTopRated} disabled={isLoading}>
+
+        <button className="filter-btn" onClick={filterTopRated}>
           Top Rated
         </button>
-        <button className="reset-btn" onClick={resetFilters} disabled={isLoading}>
+
+        <button className="reset-btn" onClick={resetFilters}>
           Reset
         </button>
-      </div>  
+      </div>
 
       <div className="restaurant-container">
         {isLoading ? (
@@ -231,29 +368,25 @@ const Body = () => {
         ) : error ? (
           <div className="error-container">
             <p className="error-text">{error}</p>
-            <button className="retry-btn" onClick={fetchData}>Retry</button>
+            <button className="retry-btn" onClick={fetchData}>
+              Retry
+            </button>
           </div>
-        ) : selectedRestaurantId ? (
-          <Restaurantmenu restaurantId={selectedRestaurantId} />
         ) : filteredRestaurants.length > 0 ? (
           filteredRestaurants.map((restaurant) => (
-            <RestaurantCard
+            <Link
               key={restaurant.info.id}
-              resData={restaurant}
-              onClick={() => handleRestaurantClick(restaurant.info.id)}
-            />
+              to={`/restaurants/${restaurant.info.id}`}
+            >
+              <RestaurantCard resData={restaurant} />
+            </Link>
           ))
         ) : (
-          <p className="no-results">No restaurants found.... Try a different search.</p>
+          <p className="no-results">No restaurants found...</p>
         )}
       </div>
     </div>
-  );  
+  );
 };
 
 export default Body;
-
-
-
-  
-       
