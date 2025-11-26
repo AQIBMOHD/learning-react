@@ -7,7 +7,7 @@ const isLocalhost = typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
 // Set your deployed Vercel URL here after deployment
-const DEPLOYED_API_URL = "https://your-swiggy-api.vercel.app";
+const DEPLOYED_API_URL = "https://swiggy-api-2-d709kzhao-md-aqibs-projects-5e09b9ac.vercel.app";
 
 // API Base URL - automatically switches between local and production
 export const API_BASE_URL = isLocalhost 

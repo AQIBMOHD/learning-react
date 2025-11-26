@@ -1,10 +1,10 @@
 {
   "name": "learning-react",
   "version": "1.0.0",
-  "description": "This is just for rev learning",
+  "description": "Swiggy Clone - Food Delivery App built with React",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html",
+    "build": "parcel build index.html --public-url ./",
     "test": "jest"
   },
   "repository": {
@@ -19,7 +19,8 @@
   "homepage": "https://github.com/AQIBMOHD/ReactLearning#readme",
   "devDependencies": {
     "parcel": "^2.13.3",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "svgo": "^3.3.2"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",

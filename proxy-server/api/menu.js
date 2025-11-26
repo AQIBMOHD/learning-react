@@ -1,4 +1,4 @@
-const { getMenuData } = require('../mockData');
+const { getMenuData } = require('./mockData');
 
 module.exports = async (req, res) => {
   // Handle CORS
