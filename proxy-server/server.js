@@ -52,11 +52,12 @@ app.get('/api/menu', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`
 ============================================
     Swiggy Clone API Server Running!
 ============================================
+  Public:  http://YOUR_PUBLIC_IP:${PORT}
   Local:   http://localhost:${PORT}
 
   Endpoints:
@@ -65,3 +66,4 @@ app.listen(PORT, () => {
 ============================================
   `);
 });
+
