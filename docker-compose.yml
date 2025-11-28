@@ -1,0 +1,18 @@
+services:
+  backend:
+    build:
+      context: ./proxy-server
+      dockerfile: Dockerfile.backend
+    container_name: swiggy-backend
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: swiggy-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
