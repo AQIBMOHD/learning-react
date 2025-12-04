@@ -1,27 +1,24 @@
-// API Base URL - Update this when you deploy the proxy server to Vercel
-// For local development: http://localhost:3000
-// For Vercel deployment: https://your-vercel-app-name.vercel.app
 
-// Automatically detect if running locally or in production
-const isLocalhost = typeof window !== 'undefined' && 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+// Detect hostname
+const hostname = typeof window !== "undefined" ? window.location.hostname : "";
 
-// Set your deployed Vercel URL here after deployment
+// Local development or Docker front-end preview ALWAYS uses localhost
+const LOCAL_API_URL = "http://localhost:3000";
+
+// Vercel backend
 const DEPLOYED_API_URL = "https://swiggy-api-2-d709kzhao-md-aqibs-projects-5e09b9ac.vercel.app";
 
-// API Base URL - automatically switches between local and production
-export const API_BASE_URL = isLocalhost 
-  ? "http://localhost:3000" 
-  : DEPLOYED_API_URL;
+// Logic
+const isLocal = hostname === "localhost" || hostname === "127.0.0.1";
 
-// Restaurant List API
+// Final API Base URL
+export const API_BASE_URL = isLocal ? LOCAL_API_URL : DEPLOYED_API_URL;
+
+// Endpoints
 export const RESTAURANT_LIST_API = `${API_BASE_URL}/api/restaurants`;
-
-// Restaurant Menu API (append restaurantId to this)
 export const RESTAURANT_MENU_API = `${API_BASE_URL}/api/menu?restaurantId=`;
 
-// Swiggy CDN for restaurant images
+// Assets
 export const CDN_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
-
-// Logo URL
 export const LOGO_URL = "https://www.logodesign.net/logo/smoking-burger-with-lettuce-3624ld.png";
+

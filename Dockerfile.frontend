@@ -1,23 +1,34 @@
-# Frontend - Build using Parcel
-FROM node:18-alpine AS build
+# --------- Stage 1: Build React/Parcel App ---------
+    FROM node:18-bullseye AS build
 
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-RUN npm run build
-
-# Serve using Nginx
-FROM nginx:stable-alpine
-
-# Remove default Nginx static files
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy Parcel build output
-COPY --from=build /app/dist /usr/share/nginx/html/
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+    WORKDIR /app
+    
+    COPY package.json package-lock.json ./
+    
+    # Install parcel globally to prevent crash
+    RUN npm install -g parcel@latest
+    RUN npm install
+    
+    COPY . .
+    
+    # Prevent memory crash during amd64 build
+    ENV PARCEL_WORKERS=1
+    ENV NODE_OPTIONS="--max-old-space-size=1024"
+    
+    # Production build for Parcel
+    RUN parcel build index.html --public-url ./
+    
+    
+    # --------- Stage 2: Serve using Nginx ---------
+    FROM nginx:stable-alpine
+    
+    # Remove default static files
+    RUN rm -rf /usr/share/nginx/html/*
+    
+    # Copy build output to nginx public directory
+    COPY --from=build /app/dist /usr/share/nginx/html/
+    
+    EXPOSE 80
+    
+    CMD ["nginx", "-g", "daemon off;"]
+    
