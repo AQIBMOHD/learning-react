@@ -18,7 +18,8 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Build Backend Image
-      run: docker build -t swiggy-backend -f Dockerfile.backend .
+      run: docker build -t swiggy-backend -f proxy-server/Dockerfile.backend proxy-server
+
 
     - name: Build Frontend Image
       run: docker build -t swiggy-frontend -f Dockerfile.frontend .
