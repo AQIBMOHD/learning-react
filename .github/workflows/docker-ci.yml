@@ -9,33 +9,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Source Code
-      uses: actions/checkout@v3
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Build Backend Image
-      run: docker build -t swiggy-backend -f proxy-server/Dockerfile.backend proxy-server
+      - name: Build Backend Image
+        run: docker build -t swiggy-backend -f proxy-server/Dockerfile.backend proxy-server
 
-    - name: Build Frontend Image
-      run: docker build -t swiggy-frontend -f Dockerfile.frontend .
+      - name: Build Frontend Image
+        run: docker build -t swiggy-frontend -f Dockerfile.frontend .
 
-    - name: Build Completed
-      run: echo "🚀 Docker images built successfully!"
+      - name: Build Completed
+        run: echo "🚀 Docker images built successfully!"
 
 
-deploy:
-  runs-on: ubuntu-latest
-  needs: build
+  deploy:
+    needs: build                 # ⬅ ensure deploy runs after build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH key
+        run: |
+          echo "$EC2_KEY" > key.pem
+          chmod 600 key.pem
 
-  steps:
-  - name: Create key file
-    run: |
-      echo "$EC2_KEY" > key.pem
-      chmod 600 key.pem
-
-  - name: Deploy to EC2
-    run: |
-      ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "bash ~/deploy.sh"
-
+      - name: Deploy on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "bash ~/deploy.sh"
