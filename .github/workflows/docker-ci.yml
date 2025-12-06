@@ -25,12 +25,17 @@ jobs:
       run: echo "🚀 Docker images built successfully!"
 
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build   # <-- Important! Deploy will run only after build succeeds
-    steps:
-    - name: Deploy to EC2
-      run: |
-        echo "$EC2_KEY" > key.pem
-        chmod 600 key.pem
-        ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "bash ~/deploy.sh"
+deploy:
+  runs-on: ubuntu-latest
+  needs: build
+
+  steps:
+  - name: Create key file
+    run: |
+      echo "$EC2_KEY" > key.pem
+      chmod 600 key.pem
+
+  - name: Deploy to EC2
+    run: |
+      ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "bash ~/deploy.sh"
+
