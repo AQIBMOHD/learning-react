@@ -26,14 +26,14 @@ jobs:
 
 
   deploy:
-    needs: build                 # ⬅ ensure deploy runs after build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup SSH key
-        run: |
-          echo "$EC2_KEY" > key.pem
-          chmod 600 key.pem
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - name: Setup SSH key
+      run: |
+        echo "${{ secrets.EC2_KEY }}" > key.pem
+        chmod 600 key.pem
 
-      - name: Deploy on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "bash ~/deploy.sh"
+    - name: Deploy on EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "bash ~/deploy.sh"
