@@ -1,3 +1,4 @@
+# services tell me in this docker-compose.yml file how many micro -services or container we run in our application
 services:
   backend:
     build:

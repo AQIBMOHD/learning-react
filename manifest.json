@@ -1,0 +1,20 @@
+{
+    "short_name": "SwiggyClone",
+    "name": "Swiggy Clone Food Delivery",
+    "icons": [
+        {
+            "src": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_192,h_192/icon-Ede.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_512,h_512/icon-Ede.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#ff5200",
+    "background_color": "#ffffff"
+}

@@ -1,0 +1,8 @@
+node_modules
+dist
+.parcel-cache
+.git
+.DS_Store
+Dockerfile.frontend
+docker-compose.yml
+README.md

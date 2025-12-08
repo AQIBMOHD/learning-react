@@ -32,25 +32,25 @@ const appRouter = createBrowserRouter([
     path: "/",
     element: <AppLayout />,
     children: [
-      { 
-        path: "/", 
-        element: <Body /> 
+      {
+        path: "/",
+        element: <Body />
       },
-      { 
+      {
         path: "/about",
-        element: <About /> 
+        element: <About />
       },
       {
         path: "/contact",
-        element: <Contact /> 
+        element: <Contact />
       },
-      { 
+      {
         path: "/cart",
-        element: <Cart /> 
+        element: <Cart />
       },
-      { 
+      {
         path: "/restaurants/:resId",
-        element: <Restaurantmenu /> 
+        element: <Restaurantmenu />
       },
     ],
     errorElement: <Error />,
@@ -59,3 +59,17 @@ const appRouter = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<RouterProvider router={appRouter} />);
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Point to the root sw.js (relative to src/App.js is ../sw.js)
+    navigator.serviceWorker.register(new URL('../sw.js', import.meta.url))
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
