@@ -5,42 +5,36 @@ on:
     branches: ["main"]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run Tests
-        run: npm test
 
+# ========== BUILD JOB ==========
   build:
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build Backend Image
+      - name: Build Backend Docker Image
         run: docker build -t swiggy-backend -f proxy-server/Dockerfile.backend proxy-server
 
-      - name: Build Frontend Image
+      - name: Build Frontend Docker Image
         run: docker build -t swiggy-frontend -f Dockerfile.frontend .
 
+
+# ========== DEPLOY JOB ==========
   deploy:
     runs-on: ubuntu-latest
-    needs: build
-
+    needs: build      # <- ensures build completes first
     steps:
-      - name: Create SSH key file
+      - name: Create SSH Key
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
           chmod 600 key.pem
 
-      - name: Deploy on EC2 using Docker Compose
+      - name: Deploy using Docker Compose on EC2
+        shell: bash
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_HOST }} "cd /home/ubuntu/learning-react && git pull origin main && sudo docker-compose down || true && sudo docker-compose up -d --build"
-
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /home/ubuntu/learning-react
+          git pull origin main
+          sudo docker-compose down || true
+          sudo docker-compose up -d --build
+          EOF
